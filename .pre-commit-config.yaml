@@ -1,0 +1,131 @@
+default_language_version:
+  python: python3.9
+repos:
+  # apply to all files
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.4.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-json
+        exclude: ^terraform/data/policies/sns_subscription_cross_account_policy.json|^src/tests/resource/opensearch/manifest-files.json|.*policies/assume_role_open_search*
+      - id: requirements-txt-fixer
+
+  # HTML and JSON, MARKDOWN format
+  - repo: https://github.com/pre-commit/mirrors-prettier
+    rev: 'v3.0.0-alpha.4'
+    hooks:
+      - id: prettier
+        name: prettier markdown
+        args: ['--config', '.markdownlint.json']
+        types: [markdown]
+  - repo: https://github.com/pre-commit/mirrors-prettier
+    rev: 'v3.0.0-alpha.4'
+    hooks:
+      - id: prettier
+        name: prettier json and yaml
+        args: ['--config', '.prettierrc.json']
+        types_or: [json, yaml]
+        exclude: ^terraform/data/policies/sns_subscription_cross_account_policy.json|^src/tests/resource/opensearch/manifest-files.json|.*policies/assume_role_open_search*
+  - repo: https://github.com/pre-commit/mirrors-prettier
+    rev: 'v3.0.0-alpha.4'
+    hooks:
+      - id: prettier
+        name: prettier html
+        args: ['--config', '.prettierrc.json']
+        types: [html]
+  # Terraform Format and Providers Lock
+  # consider also https://terraform-docs.io/user-guide/introduction/
+  # hooks from https://github.com/antonbabenko/pre-commit-terraform
+  - repo: https://github.com/antonbabenko/pre-commit-terraform
+    rev: 'v1.77.1'
+    hooks:
+      # https://github.com/antonbabenko/pre-commit-terraform#terraform_fmt
+      - id: terraform_fmt
+        args:
+          - --args=-recursive
+        types: [terraform]
+      # https://github.com/antonbabenko/pre-commit-terraform#terraform_providers_lock
+      - id: terraform_providers_lock
+        args:
+          - --args=-platform=windows_amd64
+          - --args=-platform=darwin_amd64
+          - --args=-platform=darwin_arm64
+          - --args=-platform=linux_amd64
+  # Python
+  # pre-commit runs all the remote repo from an isolated virtualenv,
+  # the venvs are cached between executions and applied only to mewly modified files (~/.cache/pre-commit)
+  - repo: https://github.com/PyCQA/autoflake
+    rev: v2.0.1
+    hooks:
+      - id: autoflake
+        args: [--remove-all-unused-imports, --remove-unused-variables, -ir, --exclude, '*/test_import_for_*.py', .]
+        types: [python]
+  - repo: https://github.com/pycqa/isort
+    rev: 5.12.0
+    hooks:
+      - id: isort
+        args: [--settings-path, setup.cfg]
+        types: [python]
+  - repo: https://github.com/psf/black-pre-commit-mirror
+    rev: 23.9.1
+    hooks:
+      - id: black
+        args: [.]
+        types: [python]
+  - repo: https://github.com/pycqa/flake8
+    rev: 6.1.0
+    hooks:
+      - id: flake8
+        # max-complexity should follow setup.cfg! but to make the hook pass at the moment we need to increase it,
+        # however this is a first sign of bad code, run locally without '--max-complexity' flag to check if you are
+        # not creating too complex code
+        args:
+          [
+            --config,
+            setup.cfg,
+            --max-complexity,
+            '50',
+            '--exclude',
+            './scripts/generate_accounts_for_regional_restrictions/*',
+          ]
+        types: [python]
+  # remote runs from an isolated virtualenv and pylint is not aware of the imports nor local modules (lambda layers)
+  # - repo: https://github.com/pycqa/pylint
+  #   rev: v2.12.2
+  #   hooks:
+  #     - id: pylint
+  #       name: pylint
+  #       args: [--rcfile, setup.cfg, --errors-only, ./src/]
+  #       types: [python]
+  # need to remove since is not found in git terminal: git bash do not know the current virtualenv
+  # activate it would be different for each of the developers
+  # -  repo: local
+  #    hooks:
+  #      - id: pylint
+  #        name: pylint
+  #        entry: pylint
+  #        args: [--rcfile, setup.cfg, --errors-only, ./src/]
+  #        language: system
+  #        pass_filenames: false
+  #        always_run: true
+  # need to remove since is not found in git terminal: git bash do not know the current virtualenv
+  # activate it would be different for each of the developers
+  # - repo: local
+  #   hooks:
+  #     - id: pytest
+  #       name: pytest
+  #       entry: pytest
+  #       language: system
+  #       pass_filenames: false
+  #       always_run: true
+  - repo: https://github.com/codespell-project/codespell
+    rev: v2.2.2
+    hooks:
+      - id: codespell
+        name: codespell
+        description: Checks for common misspellings in text files.
+        entry: codespell
+        language: python
+        types: [text]
+        exclude: 'scripts/generate_accounts_for_regional_restrictions/.*'
