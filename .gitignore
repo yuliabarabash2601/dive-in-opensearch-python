@@ -1,0 +1,42 @@
+# React
+node_modules/
+build/
+dist/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.db
+*.sqlite3
+*.log
+*.egg-info/
+dist/
+venv/
+env/
+htmlcov/
+.coverage
+.coverage.*
+.tox/
+.pytest_cache/
+.idea/
+.vscode/
+
+# Visual Studio Code
+.vscode/
+.settings.json
+.settings/
+*.code-workspace
+
+# PyCharm
+.idea/
+*.iml
+*.ipr
+*.iws
+*.bak
+*.idea/workspace.xml
+*.idea/tasks.xml
+*.idea/dictionaries
+*.idea/shelf
+
