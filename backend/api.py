@@ -1,12 +1,19 @@
 from fastapi import FastAPI, Query
-from opensearch import OpenSearch
+from opensearchpy import OpenSearch
+
 from pydantic import BaseModel
 
 app = FastAPI()
 
 # OpenSearch Configuration
-NODE_NAME = "myelkfirst"
-opensearch_client = OpenSearch([{"host": "localhost", "port": 9200}])
+opensearch_client = OpenSearch(
+        hosts=[{"host": "localhost", "port": 9200}],
+        http_auth=("admin", "admin"),
+        use_ssl=True,
+        verify_certs=False,
+        ssl_assert_hostname=False,
+        ssl_show_warn=False,
+    )
 
 
 class QueryParams(BaseModel):
@@ -14,31 +21,22 @@ class QueryParams(BaseModel):
 
 
 @app.get("/autocomplete")
-async def autocomplete(query_params: QueryParams):
-    base_query = {
-        "_source": [],
-        "size": 0,
-        "min_score": 0.5,
-        "query": {
-            "bool": {
-                "must": [
-                    {"match_phrase_prefix": {"title": {"query": query_params.query}}}
-                ],
-                "filter": [],
-                "should": [],
-                "must_not": [],
-            }
-        },
-        "aggs": {
-            "auto_complete": {
-                "terms": {
-                    "field": "title.keyword",
-                    "order": {"_count": "desc"},
-                    "size": 25,
-                }
-            }
-        },
+async def autocomplete(query: str):
+    index_name = "prefix_match_netflix"
+    wildcard_query = {
+        "_source": ["title"],
+        "size": 25,
+        "query": {"wildcard": {"title.keyword": f"{query}*"}},
     }
 
-    res = opensearch_client.search(index=NODE_NAME, size=0, body=base_query)
-    return res
+    res = opensearch_client.search(index=index_name, body=wildcard_query)
+
+    # Extract and return only the titles from the response
+    autocomplete_results = [hit["_source"]["title"] for hit in res["hits"]["hits"]]
+
+    return autocomplete_results
+
+if __name__ == "__main__":
+    import uvicorn
+
+    uvicorn.run(app, host="0.0.0.0", port=8000)
