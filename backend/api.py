@@ -24,11 +24,16 @@ class QueryParams(BaseModel):
 async def autocomplete(query: str):
     index_name = "prefix_match_netflix"
     wildcard_query = {
-        "_source": ["title"],
-        "size": 25,
-        "query": {"wildcard": {"title.keyword": f"{query}*"}},
+  "query": {
+    "match_phrase_prefix": {
+      "title": {
+        "query": query,
+        "slop": 3,
+        "max_expansions": 10
+      }
     }
-
+  }
+}
     res = opensearch_client.search(index=index_name, body=wildcard_query)
 
     # Extract and return only the titles from the response
