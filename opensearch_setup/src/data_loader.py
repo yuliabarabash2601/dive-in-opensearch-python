@@ -82,10 +82,9 @@ def transform_to_bulk(dataset: List[Dict[str, Any]], index_name: str) -> str:
     bulk_opensearch = ""
 
     for row in dataset:
-        uuid =  str(uuid.uuid4())
         bulk_opensearch += '{"index": {"_index": "%s", "_id": "%s"}}\n' % (
             index_name,
-            f'{row["show_id"]}_{uuid}',
+            f'{row["show_id"]}',
         )
         bulk_opensearch += json.dumps(row) + "\n"
     return bulk_opensearch

@@ -1,0 +1,69 @@
+/* GoogleStyleTypeahead.css with teal background adjustments */
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #4cb993; /* Teal background for the whole page */
+  font-family: 'Arial', sans-serif; /* Default font */
+}
+
+.typeahead-container {
+  position: relative;
+  width: 100%;
+  max-width: 600px; /* Google's search box width */
+  margin: 20px auto;
+  background-color: #4cb993; /* Teal background */
+  padding: 10px; /* Add some padding around the container */
+  border-radius: 8px; /* Rounded corners for the container */
+}
+
+.typeahead-input {
+  width: calc(100% - 0px); /* Adjust width to account for padding */
+  padding: 12px 20px;
+  font-size: 18px;
+  border: 1px solid #dfe1e5;
+  border-radius: 24px;
+  background-color: #fff;
+  box-shadow: 0 1px 6px rgba(32, 33, 36, 0.28);
+  box-sizing: border-box;
+  transition: box-shadow 0.2s ease-in-out, border-color 0.2s ease-in-out;
+}
+
+.typeahead-input:focus {
+  outline: none;
+  border-color: rgba(223, 225, 229, 0);
+  box-shadow: 0 1px 6px rgba(32, 33, 36, 0.18), 0 0 8px rgba(26, 26, 29, 0.15);
+}
+
+.typeahead-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  border: 1px solid #dfe1e5;
+  border-top: none;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  background-color: #fff;
+  box-shadow: 0 4px 6px rgba(32, 33, 36, 0.28);
+  border-radius: 0 0 20px 20px;
+  overflow: hidden;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.typeahead-item {
+  padding: 12px 20px;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.typeahead-item:hover,
+.typeahead-item:focus {
+  background-color: #3da982; /* A slightly darker teal for contrast on hover/focus */
+}
+
+.typeahead-dropdown-empty {
+  display: none;
+}
