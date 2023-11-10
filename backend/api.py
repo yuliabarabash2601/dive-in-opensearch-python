@@ -68,7 +68,7 @@ async def autocomplete(query: str):
     autocomplete_results = [
         hit["_source"]["title"] for hit in res["suggest"]["autocomplete"][0]["options"]
     ]
-
+    print(autocomplete_results)
     return autocomplete_results
 
 

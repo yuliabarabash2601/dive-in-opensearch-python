@@ -5,7 +5,7 @@ import './TypeaheadSearch.css';
 const TypeaheadSearch = () => {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState([]);
-    const [isDropdownVisible, setIsDropdownVisible] = useState(false);
+    const [isDropdownVisible, setIsDropdownVisible] = useState(true);
     const [baseURL, setBaseURL] = useState("http://0.0.0.0:8000/search_as_you_type/autocomplete");
 
     useEffect(() => {
@@ -25,9 +25,11 @@ const TypeaheadSearch = () => {
     // Update the query when an item is selected
     setQuery(value);
     // Hide the dropdown
-    setIsDropdownVisible(false);
   };
     const handleBaseURLChange = (e) => {
+        console.log("baseURL", e.target.value);
+        setQuery(""); // clear the query
+        setResults([])
     setBaseURL(e.target.value);
   };
 
@@ -47,7 +49,7 @@ const TypeaheadSearch = () => {
         value={query}
         onChange={e => setQuery(e.target.value)}
         onFocus={() => results.length > 0 && setIsDropdownVisible(true)}
-        onBlur={() => setTimeout(() => setIsDropdownVisible(false), 200)}
+        onBlur={() => setTimeout(() => setIsDropdownVisible(true), 200)}
       />
       {isDropdownVisible && (
         <ul className="typeahead-dropdown">
