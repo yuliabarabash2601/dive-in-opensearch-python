@@ -67,3 +67,59 @@ body {
 .typeahead-dropdown-empty {
   display: none;
 }
+
+
+.baseurl-selector {
+  display: block; /* Display block to fill the width of its container */
+  width: 100%; /* Full width */
+  padding: 12px 20px; /* Same padding as the input field */
+  font-size: 18px; /* Match font-size with the input field */
+  border: 1px solid #dfe1e5; /* Border to match the input field */
+  border-radius: 24px; /* Rounded corners like the input field */
+  background-color: #fff; /* White background for visibility */
+  box-shadow: 0 1px 6px rgba(32, 33, 36, 0.28); /* Soft shadow for depth */
+  -webkit-appearance: none; /* Disable native styling */
+  -moz-appearance: none; /* Disable native styling */
+  appearance: none; /* Disable native styling */
+  position: relative; /* For positioning the custom arrow */
+  background-image: url('data:image/svg+xml;utf8,<svg fill="black" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>'); /* Custom arrow */
+  background-repeat: no-repeat; /* No repeat for the custom arrow */
+  background-position-x: 95%; /* Position for the custom arrow */
+  background-position-y: 50%; /* Center the custom arrow */
+}
+
+.baseurl-selector:focus {
+  outline: none; /* Remove the default focus outline */
+  border-color: rgba(223, 225, 229, 0); /* Border transition on focus */
+  box-shadow: 0 1px 6px rgba(32, 33, 36, 0.18), 0 0 8px rgba(26, 26, 29, 0.15); /* Shadow transition on focus */
+}
+
+/* If using a separate dropdown image for select */
+.baseurl-selector-arrow {
+  display: inline-block;
+  width: 0;
+  height: 0;
+  margin-left: 0.5em;
+  vertical-align: 0.255em;
+  content: "";
+  border-left: 0.25em solid transparent;
+  border-right: 0.25em solid transparent;
+  border-top: 0.375em solid;
+}
+
+/* Adjust the select to fit with the input on the same line */
+.typeahead-form-group {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px; /* Spacing between input and select */
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .typeahead-form-group {
+    flex-direction: column; /* Stack input and select on smaller screens */
+  }
+  .typeahead-select {
+    width: calc(100% - 0px); /* Adjust width on smaller screens */
+  }
+}

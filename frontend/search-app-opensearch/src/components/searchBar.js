@@ -6,11 +6,12 @@ const TypeaheadSearch = () => {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState([]);
     const [isDropdownVisible, setIsDropdownVisible] = useState(false);
+    const [baseURL, setBaseURL] = useState("http://0.0.0.0:8000/search_as_you_type/autocomplete");
 
-  useEffect(() => {
+    useEffect(() => {
       console.log("query", query);
-    if (query.length > 3) {
-      axios.get(`http://0.0.0.0:8000/search_as_you_type/autocomplete?query=${query}`)
+
+      axios.get(`${baseURL}?query=${query}`)
         .then(response => {
             console.log("response", response);
           setResults(response.data);
@@ -18,9 +19,6 @@ const TypeaheadSearch = () => {
         .catch(error => {
           console.error("Error fetching typeahead results:", error);
         });
-    } else {
-      setResults([]);
-    }
   }, [query]);
 
    const handleSelect = (value) => {
@@ -29,9 +27,19 @@ const TypeaheadSearch = () => {
     // Hide the dropdown
     setIsDropdownVisible(false);
   };
+    const handleBaseURLChange = (e) => {
+    setBaseURL(e.target.value);
+  };
 
   return (
     <div className="typeahead-container">
+        {/* Dropdown to select the base URL */}
+      <select onChange={handleBaseURLChange} className="baseurl-selector">
+        <option value="http://0.0.0.0:8000/prefix_match/autocomplete">Prefix matching</option>
+          <option value="http://0.0.0.0:8000/n_gram/autocomplete">Edge n-gram matching</option>
+        <option value="http://0.0.0.0:8000/completion/autocomplete">Completion suggester</option>
+        <option value="http://0.0.0.0:8000/search_as_you_type/autocomplete">Search as you type</option>
+      </select>
       <input
         type="text"
         className="typeahead-input"

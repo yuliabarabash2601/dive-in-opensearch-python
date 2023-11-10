@@ -55,12 +55,19 @@ async def autocomplete(query: str):
 async def autocomplete(query: str):
     index_name = "completion_netflix"
     wildcard_query = {
-        "suggest": {"autocomplete": {"prefix": query, "completion": {"field": "title"}}}
+        "suggest": {
+            "autocomplete": {
+                "prefix": query,
+                "completion": {"field": "title", "fuzzy": {"fuzziness": "AUTO"}},
+            }
+        }
     }
     res = opensearch_client.search(index=index_name, body=wildcard_query)
-
+    print(res)
     # Extract and return only the titles from the response
-    autocomplete_results = [hit["_source"]["title"] for hit in res["hits"]["hits"]]
+    autocomplete_results = [
+        hit["_source"]["title"] for hit in res["suggest"]["autocomplete"][0]["options"]
+    ]
 
     return autocomplete_results
 
@@ -76,7 +83,6 @@ async def autocomplete(query: str):
                 "fields": ["title", "title._2gram", "title._3gram"],
             }
         },
-        "size": 3,
     }
     res = opensearch_client.search(index=index_name, body=wildcard_query)
 
